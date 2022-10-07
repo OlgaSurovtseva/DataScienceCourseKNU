@@ -1,2 +1,3 @@
 # DataScienceCourseKNU
-# Заголовок та короткий опис репозиторію
+newString <- "Заголовок та короткий опис репозиторію"
+print (newString)
