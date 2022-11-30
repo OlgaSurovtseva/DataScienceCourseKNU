@@ -1,0 +1,45 @@
+
+# 1.Які назви стовпців файлу даних?
+
+name=read.csv("C:\\Users\\Lenovo\\Desktop\\hw1_data.csv")
+names(name)
+
+# 2.Виведіть перші 6 строк фрейму даних.
+
+head(name, 6)
+
+# 3.Скільки спостерігань (строк) в дата фреймі?
+
+nrow(name)
+
+# 4.Виведіть останні 10 строк дата фрейму.
+
+tail(name, 10)
+
+# 5.Як багато значень «NA» в стовпці «Ozone»?
+
+sum(is.na(name))
+
+# 6.Яке середнє (mean) стовпця «Ozone». Виключити «NA» значення.
+
+mean(name[,"Ozone"], trim=0, na.rm=TRUE)
+
+# 7.Виведіть частину набору даних (subset) зі значенням «Ozone» > 31 та «Temp» > 90. Яке середнє (mean) значень «Solar.R» в цьому наборі даних (subset)?
+
+my_subset <- subset(name, Ozone > 31 & Temp > 90)
+my_subset
+
+mean(my_subset$Solar.R)
+
+# 8.Яке середнє значення (mean) для «Temp» для червня («Month» дорівнює 6)?
+
+mean(subset(name, Month == 6)$Temp)
+
+# 9.Яке максимальне значення «Ozone» для травня («Month» дорівнює 5)?
+
+max(subset(name, Month == 5)$Ozone)
+
+max(subset(name, Month == 5)$Ozone, na.rm=TRUE)
+
+
+
