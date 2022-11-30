@@ -1,0 +1,83 @@
+
+rm(list = ls())
+setwd("C:\\Users\\Lenovo\\Desktop")
+
+
+# 1
+
+pmean <- function(directory, pollutant, id = 1:332) {
+  means <- c()
+  for(monitor in id){
+    path <- paste(getwd(), "/", directory, "/", sprintf("%03d", monitor), ".csv", sep = "")
+    monitor_data <- read.csv(path)
+    interested_data <- monitor_data[pollutant]
+    means <- c(means, interested_data[!is.na(interested_data)])
+  }
+  mean(means)
+}
+pmean("specdata","sulfate",1:10)
+pmean("specdata","sulfate",55)
+pmean("specdata","nitrate")
+
+
+# 2
+
+complete <- function(directory, id = 1:332){
+  
+  results <- data.frame(id=numeric(0), nobs=numeric(0))
+  for(monitor in id){
+    path <- paste(getwd(), "/", directory, "/", sprintf("%03d", monitor), ".csv", sep = "")
+    monitor_data <- read.csv(path)
+    interested_data <- monitor_data[(!is.na(monitor_data$sulfate)), ]
+    interested_data <- interested_data[(!is.na(interested_data$nitrate)), ]
+    nobs <- nrow(interested_data)
+    results <- rbind(results, data.frame(id=monitor, nobs=nobs))
+  }
+  results
+}
+
+complete("specdata",1)
+complete("specdata",c(2,4,8,10,12))
+complete("specdata",50:60)
+
+
+# 3
+
+corr <- function(directory, threshold = 0){
+
+  cor_results <- numeric(0)
+  
+  complete_cases <- complete(directory)
+  complete_cases <- complete_cases[complete_cases$nobs>=threshold, ]
+  
+  if(nrow(complete_cases)>0){
+    for(monitor in complete_cases$id){
+      path <- paste(getwd(), "/", directory, "/", sprintf("%03d", monitor), ".csv", sep = "")
+
+      monitor_data <- read.csv(path)
+      
+      interested_data <- monitor_data[(!is.na(monitor_data$sulfate)), ]
+      interested_data <- interested_data[(!is.na(interested_data$nitrate)), ]
+      sulfate_data <- interested_data["sulfate"]
+      nitrate_data <- interested_data["nitrate"]
+      cor_results <- c(cor_results, cor(sulfate_data, nitrate_data))
+    }
+  }
+  cor_results
+}
+
+cr <- corr("specdata",150) 
+head(cr)
+summary(cr)
+
+cr <- corr("specdata",400) 
+head(cr)
+summary(cr)
+
+cr <- corr("specdata",5000) 
+head(cr)
+summary(cr)
+length(cr)
+
+
+
